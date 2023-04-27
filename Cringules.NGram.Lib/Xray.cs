@@ -1,5 +1,8 @@
 namespace Cringules.NGram.Lib;
 
+/// <summary>
+/// Класс дифрактограммы.
+/// </summary>
 public class Xray
 {
     /// <summary>
@@ -27,31 +30,29 @@ public class Xray
     /// TODO: Метод для сглаживания графика.
     /// TODO: Может быть тут добавим параметр для сглаживания, я еще не решила.
     /// </summary>
-    /// <param name="oldXray">Объект класса Xray - дифрактограмма для сглаживания.</param>
     /// <returns>Новый экземпляр класса - сглаженный график.</returns>
-    public static Xray SmoothXray(Xray oldXray)
+    public Xray SmoothXray()
     {
-        Xray newXray = new(oldXray.X, oldXray.Y);
+        Xray newXray = new(X, Y);
         return newXray;
     }
 
     /// <summary>
     /// TODO: Метод для выделения примерных границ пиков графика.
     /// </summary>
-    /// <param name="xray">Дифрактограмма.</param>
     /// <returns>Список координат по X - границ пиков.</returns>
-    public static List<double> GetPeakCoords(Xray xray)
+    public List<double> GetPeakCoords()
     {
         List<double> coordsList = new();
 
-        coordsList.Add(xray.X[0]);
+        coordsList.Add(X[0]);
 
         // не менять на LINQ-запрос, я мб тут чет умнее придумаю:D
-        for (var i = 0; i < xray.X.Count; i++)
+        for (var i = 0; i < X.Count; i++)
         {
-            if (xray.Y[i - 1] < xray.Y[i] && xray.Y[i + 1] < xray.Y[i])
+            if (Y[i - 1] < Y[i] && Y[i + 1] < Y[i])
             {
-                coordsList.Add(xray.X[i]);
+                coordsList.Add(X[i]);
             }
         }
 
@@ -61,14 +62,13 @@ public class Xray
     /// <summary>
     /// TODO: Метод для выделения пика по заданным координатам (по X) начала и конца.
     /// </summary>
-    /// <param name="xray">Дифрактограмма.</param>
     /// <param name="xBegin">Координата начала по X.</param>
     /// <param name="xEnd">Координата конца по X.</param>
     /// <returns>Объект класса XrayPeak - выделенный пик.</returns>
-    public static XrayPeak GetPeak(Xray xray, double xBegin, double xEnd)
+    public XrayPeak GetPeak(double xBegin, double xEnd)
     {
-        var begin = xray.X.FindIndex(0, xray.X.Count - 1, x => x >= xBegin);
-        var end = xray.X.FindIndex(0, xray.X.Count - 1, x => x <= xEnd);
-        return new XrayPeak(xray.X.GetRange(begin, end), xray.Y.GetRange(begin, end));
+        var begin = X.FindIndex(0, X.Count - 1, x => x >= xBegin);
+        var end = X.FindIndex(0, X.Count - 1, x => x <= xEnd);
+        return new XrayPeak(X.GetRange(begin, end), Y.GetRange(begin, end));
     }
 }

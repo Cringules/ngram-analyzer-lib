@@ -1,5 +1,8 @@
 namespace Cringules.NGram.Lib;
 
+/// <summary>
+/// Класс пика дифрактограммы.
+/// </summary>
 public class XrayPeak
 {
     /// <summary>
@@ -19,69 +22,66 @@ public class XrayPeak
     /// </summary>
     /// <param name="x">Список координат пика по оси абсцисс.</param>
     /// <param name="y">Список координат пика по оси ординат.</param>
-    public XrayPeak(List<double> x, List<double> y)
+    public XrayPeak(IEnumerable<double> x, IEnumerable<double> y)
     {
         X = new List<double>(x);
         Y = new List<double>(y);
+        backgroundLevel = Y[0];
     }
 
     /// <summary>
     /// TODO: Метод для получения координаты по X вершины пика.
     /// </summary>
-    /// <param name="peak">Объект класса XrayPeak - данный пик.</param>
     /// <returns>Угол при максимальном значении пика (координата по X).</returns>
-    public static double GetPeakTop(XrayPeak peak)
+    public double GetPeakTop()
     {
-        return peak.X[peak.Y.IndexOf(peak.Y.Max())];
+        return X[Y.IndexOf(Y.Max())];
     }
 
     /// <summary>
     /// Метод для получения самого левого значения пика по Y и установки его как уровня фона.
     /// </summary>
-    /// <param name="peak">Пик дифрактограммы.</param>
     /// <returns>Новый уровень фона - самое левое значение пика.</returns>
-    public static double getLeftYValue(XrayPeak peak)
+    public double getLeftYValue()
     {
-        peak.backgroundLevel = peak.Y[0];
-        return peak.backgroundLevel;
+        backgroundLevel = Y[0];
+        return backgroundLevel;
     }
 
     /// <summary>
     /// Метод для получения самого правого значения пика по Y и установки его как уровня фона.
     /// </summary>
-    /// <param name="peak">Пик дифрактограммы.</param>
     /// <returns>Новый уровень фона - самое правое значение пика.</returns>
-    public static double getRightYValue(XrayPeak peak)
+    public double getRightYValue()
     {
-        peak.backgroundLevel = peak.Y[^1];
-        return peak.backgroundLevel;
+        backgroundLevel = Y[^1];
+        return backgroundLevel;
     }
 
     /// <summary>
     /// TODO: Метод для ручной установки уровня фона.
-    /// TODO: Можно сделать методом, возвращающим bool, чтобы была проверка на уровень фона < вершины?
+    /// TODO: Можно сделать методом, возвращающим bool, чтобы была проверка на уровень фона не больше вершины.
+    /// TODO: А может backgroundLevel свойством сделать...
     /// </summary>
-    /// <param name="peak"></param>
-    /// <param name="backgroundLevel"></param>
-    public static void setBackgroundLevel(XrayPeak peak, double backgroundLevel)
+    /// <param name="newBackgroundLevel">Новое значение фона.</param>
+    public void setBackgroundLevel(double newBackgroundLevel)
     {
-        peak.backgroundLevel = backgroundLevel;
+        backgroundLevel = newBackgroundLevel;
     }
 
     /// <summary>
     /// Метод для симметризации пика (по левой части).
     /// </summary>
-    /// <param name="oldPeak">Пик дифрактограммы.</param>
     /// <returns>Новый пик, отсимметризованный по левой части.</returns>
-    public static XrayPeak SymmetrizePeakLeft(XrayPeak oldPeak)
+    public XrayPeak SymmetrizePeakLeft()
     {
-        List<double> newX = new(oldPeak.X.GetRange(0, oldPeak.Y.IndexOf(oldPeak.Y.Max())));
+        List<double> newX = new(X.GetRange(0, Y.IndexOf(Y.Max())));
         List<double> symmetricalX = new(newX);
         symmetricalX.Reverse();
-        var xTop = GetPeakTop(oldPeak);
+        var xTop = GetPeakTop();
         newX = newX.Concat(symmetricalX.Select(x => (2 * xTop - x))).ToList();
 
-        List<double> newY = new(oldPeak.Y.GetRange(0, oldPeak.Y.IndexOf(oldPeak.Y.Max())));
+        List<double> newY = new(Y.GetRange(0, Y.IndexOf(Y.Max())));
         List<double> symmetricalY = new(newY);
         symmetricalY.Reverse();
         newY = newY.Concat(symmetricalY).ToList();
@@ -92,19 +92,16 @@ public class XrayPeak
     /// <summary>
     /// Метод для симметризации пика (по правой части).
     /// </summary>
-    /// <param name="oldPeak">Пик дифрактограммы.</param>
     /// <returns>Новый пик, отсимметризованный по правой части.</returns>
-    public static XrayPeak SymmetrizePeakRight(XrayPeak oldPeak)
+    public XrayPeak SymmetrizePeakRight()
     {
-        List<double> newX = new(oldPeak.X.GetRange(oldPeak.Y.IndexOf(oldPeak.Y.Max()),
-            oldPeak.Y.Count - 1));
+        List<double> newX = new(X.GetRange(Y.IndexOf(Y.Max()), Y.Count - 1));
         List<double> symmetricalX = new(newX);
         symmetricalX.Reverse();
-        var xTop = GetPeakTop(oldPeak);
+        var xTop = GetPeakTop();
         newX = (symmetricalX.Select(x => (2 * xTop - x))).Concat(newX).ToList();
 
-        List<double> newY = new(oldPeak.Y.GetRange(oldPeak.Y.IndexOf(oldPeak.Y.Max()),
-            oldPeak.Y.Count - 1));
+        List<double> newY = new(Y.GetRange(Y.IndexOf(Y.Max()), Y.Count - 1));
         List<double> symmetricalY = new(newY);
         symmetricalY.Reverse();
         newY = symmetricalY.Concat(newX).ToList();
@@ -115,63 +112,54 @@ public class XrayPeak
     /// <summary>
     /// TODO: Метод для автоматической аппроксимации пика по Гауссу.
     /// </summary>
-    /// <param name="oldPeak">Пик дифрактограммы.</param>
     /// <returns>Новый пик.</returns>
-    public static XrayPeak ApproximatePeakGaussianAuto(XrayPeak oldPeak)
+    public XrayPeak ApproximatePeakGaussianAuto()
     {
-        return new XrayPeak(oldPeak.X, oldPeak.Y);
+        return new XrayPeak(X, Y);
     }
 
     /// <summary>
     /// TODO: Метод для автоматической аппроксимации пика по Лоренцу.
     /// </summary>
-    /// <param name="oldPeak">Пик дифрактограммы.</param>
     /// <returns>Новый пик.</returns>
-    public static XrayPeak ApproximatePeakLorentzAuto(XrayPeak oldPeak)
+    public XrayPeak ApproximatePeakLorentzAuto()
     {
-        return new XrayPeak(oldPeak.X, oldPeak.Y);
+        return new XrayPeak(X, Y);
     }
 
     /// <summary>
     /// TODO: Метод для автоматической аппроксимации пика по Войту.
     /// </summary>
-    /// <param name="oldPeak">Пик дифрактограммы.</param>
     /// <returns>Новый пик.</returns>
-    public static XrayPeak ApproximatePeakVoigtAuto(XrayPeak oldPeak)
+    public XrayPeak ApproximatePeakVoigtAuto()
     {
-        return new XrayPeak(oldPeak.X, oldPeak.Y);
+        return new XrayPeak(X, Y);
     }
 
     /// <summary>
     /// TODO: Метод для ручной аппроксимации пика по Гауссу.
     /// </summary>
-    /// <param name="oldPeak">Пик дифрактограммы.</param>
     /// <returns>Новый пик.</returns>
-    public static XrayPeak ApproximatePeakGaussianManual(XrayPeak oldPeak, double height,
-        double width, double corr)
+    public XrayPeak ApproximatePeakGaussianManual(double height, double width, double corr)
     {
-        return new XrayPeak(oldPeak.X, oldPeak.Y);
+        return new XrayPeak(X, Y);
     }
 
     /// <summary>
     /// TODO: Метод для ручной аппроксимации пика по Лоренцу.
     /// </summary>
-    /// <param name="oldPeak">Пик дифрактограммы.</param>
     /// <returns>Новый пик.</returns>
-    public static XrayPeak ApproximatePeakLorentzManual(XrayPeak oldPeak, double height,
-        double width, double corr)
+    public XrayPeak ApproximatePeakLorentzManual(double height, double width, double corr)
     {
-        return new XrayPeak(oldPeak.X, oldPeak.Y);
+        return new XrayPeak(X, Y);
     }
 
     /// <summary>
     /// TODO: Метод для ручной аппроксимации пика по Войту.
     /// </summary>
-    /// <param name="oldPeak">Пик дифрактограммы.</param>
     /// <returns>Новый пик.</returns>
-    public static XrayPeak ApproximatePeakVoigtManual(XrayPeak oldPeak, double height,
-        double width, double corr, double coef)
+    public XrayPeak ApproximatePeakVoigtManual(double height, double width, double corr, double coef)
     {
-        return new XrayPeak(oldPeak.X, oldPeak.Y);
+        return new XrayPeak(X, Y);
     }
 }
