@@ -9,7 +9,7 @@ public class XrayPeakAnalyzer
     /// <summary>
     /// Исследуемый пик.
     /// </summary>
-    private XrayPeak peak;
+    private XrayPeak _peak;
 
     /// <summary>
     /// Конструктор класса.
@@ -17,7 +17,7 @@ public class XrayPeakAnalyzer
     /// <param name="peak">Исследуемый пик.</param>
     public XrayPeakAnalyzer(XrayPeak peak)
     {
-        this.peak = peak; // тут копировать или так оставить?
+        this._peak = peak; // тут копировать или так оставить?
     }
 
     /// <summary>
@@ -26,7 +26,7 @@ public class XrayPeakAnalyzer
     /// <returns>Максимальная интенсивность.</returns>
     public double GetIntensityMax()
     {
-        return peak.GetPeakTop().Y - peak.backgroundLevel; // тут же надо вычитать, или не надо, хмхм
+        return _peak.GetPeakTop().Y - _peak.backgroundLevel; // тут же надо вычитать, или не надо, хмхм
     }
     
     /// <summary>
@@ -35,7 +35,7 @@ public class XrayPeakAnalyzer
     /// <returns>Угол отражения.</returns>
     public double GetTopAngle()
     {
-        return peak.GetPeakTop().X;
+        return _peak.GetPeakTop().X;
     }
     
     /// <summary>
