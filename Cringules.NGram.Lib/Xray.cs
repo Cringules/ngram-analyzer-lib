@@ -6,24 +6,17 @@ namespace Cringules.NGram.Lib;
 public class Xray
 {
     /// <summary>
-    /// Список координат графика по оси абсцисс.
+    /// Список точек.
     /// </summary>
-    public List<double> X { get; }
-
-    /// <summary>
-    /// Список координат графика по оси ординат.
-    /// </summary>
-    public List<double> Y { get; }
+    public List<Point> points { get; }
 
     /// <summary>
     /// Конструктор класса, принимает на вход два списка координат точек графика.
     /// </summary>
-    /// <param name="x">Список координат графика по оси абсцисс.</param>
-    /// <param name="y">Список координат графика по оси ординат.</param>
-    public Xray(List<double> x, List<double> y)
+    /// <param name="points">Список точек пика.</param>
+    public Xray(IEnumerable<Point> points)
     {
-        X = new List<double>(x);
-        Y = new List<double>(y);
+        this.points = new List<Point>(points);
     }
 
     /// <summary>
@@ -33,7 +26,7 @@ public class Xray
     /// <returns>Новый экземпляр класса - сглаженный график.</returns>
     public Xray SmoothXray()
     {
-        Xray newXray = new(X, Y);
+        Xray newXray = new(points);
         return newXray;
     }
 
@@ -41,18 +34,16 @@ public class Xray
     /// TODO: Метод для выделения примерных границ пиков графика.
     /// </summary>
     /// <returns>Список координат по X - границ пиков.</returns>
-    public List<double> GetPeakCoords()
+    public List<Point> GetPeakCoords()
     {
-        List<double> coordsList = new();
-
-        coordsList.Add(X[0]);
+        List<Point> coordsList = new() { points[0] };
 
         // не менять на LINQ-запрос, я мб тут чет умнее придумаю:D
-        for (var i = 0; i < X.Count; i++)
+        for (var i = 0; i < points.Count; i++)
         {
-            if (Y[i - 1] < Y[i] && Y[i + 1] < Y[i])
+            if (points[i - 1].Y < points[i].Y && points[i + 1].Y < points[i].Y)
             {
-                coordsList.Add(X[i]);
+                coordsList.Add(points[i]);
             }
         }
 
@@ -67,8 +58,8 @@ public class Xray
     /// <returns>Объект класса XrayPeak - выделенный пик.</returns>
     public XrayPeak GetPeak(double xBegin, double xEnd)
     {
-        var begin = X.FindIndex(0, X.Count - 1, x => x >= xBegin);
-        var end = X.FindIndex(0, X.Count - 1, x => x <= xEnd);
-        return new XrayPeak(X.GetRange(begin, end), Y.GetRange(begin, end));
+        var begin = points.FindIndex(0, points.Count - 1, p => p.X >= xBegin);
+        var end = points.FindIndex(0, points.Count - 1, p => p.X <= xEnd);
+        return new XrayPeak(points.GetRange(begin, end));
     }
 }
