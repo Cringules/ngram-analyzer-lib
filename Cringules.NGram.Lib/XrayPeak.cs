@@ -5,7 +5,7 @@ namespace Cringules.NGram.Lib;
 /// </summary>
 public class XrayPeak
 {
-    private static double TOLERANCE = 0.000001;
+    private const double Tolerance = 0.000001;
 
     /// <summary>
     /// Список точек.
@@ -33,7 +33,7 @@ public class XrayPeak
     /// <returns>Угол при максимальном значении пика (координата по X).</returns>
     public Point GetPeakTop()
     {
-        return points[points.FindIndex(p => Math.Abs(p.Y - points.Max(p0 => p0.Y)) < TOLERANCE)];
+        return points[points.FindIndex(p => Math.Abs(p.Y - points.Max(p0 => p0.Y)) < Tolerance)];
     }
 
     /// <summary>
@@ -75,7 +75,7 @@ public class XrayPeak
     {
         List<Point> newPoints =
             new(points.GetRange(0,
-                points.FindIndex(p => Math.Abs(p.Y - points.Max(p0 => p0.Y)) < TOLERANCE)));
+                points.FindIndex(p => Math.Abs(p.Y - points.Max(p0 => p0.Y)) < Tolerance)));
         List<Point> symmetricalPoints = new(newPoints);
         symmetricalPoints.Reverse();
         var xTop = GetPeakTop().X;
@@ -93,7 +93,7 @@ public class XrayPeak
     {
         List<Point> newPoints =
             new(points.GetRange(0,
-                points.FindIndex(p => Math.Abs(p.Y - points.Max(p0 => p0.Y)) < TOLERANCE)));
+                points.FindIndex(p => Math.Abs(p.Y - points.Max(p0 => p0.Y)) < Tolerance)));
         List<Point> symmetricalPoints = new(newPoints);
         symmetricalPoints.Reverse();
         var xTop = GetPeakTop().X;

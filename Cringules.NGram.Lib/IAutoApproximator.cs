@@ -3,7 +3,7 @@
 /// <summary>
 /// Интерфейс, отвечающий за метод автоматической аппроксимации.
 /// </summary>
-public interface IAutoApproximable
+public interface IAutoApproximator
 {
     /// <summary>
     /// Метод для автоматической аппроксимации пика.

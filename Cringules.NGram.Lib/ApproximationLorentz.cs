@@ -3,7 +3,7 @@
 /// <summary>
 /// Класс, реализующий аппроксимацию пика по Лоренцу.
 /// </summary>
-public class ApproximationLorentz : IAutoApproximable, IManualApproximable
+public class ApproximationLorentz : IAutoApproximator, IManualApproximator
 {
     /// <summary>
     /// TODO: Метод для автоматической аппроксимации пика по Лоренцу.

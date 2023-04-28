@@ -3,7 +3,7 @@
 /// <summary>
 /// Класс, реализующий аппроксимацию пика по Гауссу.
 /// </summary>
-public class ApproximationGaussian : IAutoApproximable, IManualApproximable
+public class ApproximationGaussian : IAutoApproximator, IManualApproximator
 {
     /// <summary>
     /// TODO: Метод для автоматической аппроксимации пика по Гауссу.

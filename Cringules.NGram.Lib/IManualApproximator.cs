@@ -3,7 +3,7 @@
 /// <summary>
 /// Интерфейс, отвечающий за метод ручной аппроксимации.
 /// </summary>
-public interface IManualApproximable
+public interface IManualApproximator
 {
     /// <summary>
     /// Метод для ручной аппроксимации пика.

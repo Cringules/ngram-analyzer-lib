@@ -3,7 +3,7 @@
 /// <summary>
 /// Класс, реализующий аппроксимацию пика по Войту.
 /// </summary>
-public class ApproximationVoigt : IAutoApproximable, IManualApproximable
+public class ApproximationVoigt : IAutoApproximator, IManualApproximator
 {
     /// <summary>
     /// TODO: Метод для автоматической аппроксимации пика по Войту.

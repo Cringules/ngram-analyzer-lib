@@ -24,7 +24,7 @@ public class XrayPeakAnalyzer
     /// Метод для получения максимальной интенсивности.
     /// </summary>
     /// <returns>Максимальная интенсивность.</returns>
-    public double GetIMax()
+    public double GetIntensityMax()
     {
         return peak.GetPeakTop().Y - peak.backgroundLevel; // тут же надо вычитать, или не надо, хмхм
     }
@@ -42,7 +42,7 @@ public class XrayPeakAnalyzer
     /// TODO: Метод для получения интегральной интенсивности.
     /// </summary>
     /// <returns>Угол отражения.</returns>
-    public double GetIIntegral()
+    public double GetIntensityIntegral()
     {
         return 0; // тут будет площадь
     }
