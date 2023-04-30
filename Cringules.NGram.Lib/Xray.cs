@@ -39,7 +39,7 @@ public class Xray
         List<Point> coordsList = new() { points[0] };
 
         // не менять на LINQ-запрос, я мб тут чет умнее придумаю:D
-        for (var i = 0; i < points.Count - 2; i++)
+        for (var i = 1; i < points.Count - 1; i++)
         {
             if (points[i - 1].Y > points[i].Y && points[i + 1].Y > points[i].Y)
             {
