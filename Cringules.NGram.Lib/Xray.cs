@@ -47,6 +47,8 @@ public class Xray
             }
         }
 
+        coordsList.Add(points[^1]);
+        
         return coordsList;
     }
 
@@ -58,8 +60,8 @@ public class Xray
     /// <returns>Объект класса XrayPeak - выделенный пик.</returns>
     public XrayPeak GetPeak(double xBegin, double xEnd)
     {
-        var begin = points.FindIndex(0, points.Count - 1, p => p.X >= xBegin);
-        var end = points.FindIndex(0, points.Count - 1, p => p.X <= xEnd);
-        return new XrayPeak(points.GetRange(begin, end));
+        var begin = points.FindIndex(0, points.Count, p => p.X >= xBegin);
+        var end = points.FindLastIndex(0, points.Count, p => p.X <= xEnd);
+        return new XrayPeak(points.GetRange(begin, end - begin + 1));
     }
 }
