@@ -59,7 +59,7 @@ public class Xray
     public XrayPeak GetPeak(double xBegin, double xEnd)
     {
         var begin = points.FindIndex(0, points.Count - 1, p => p.X >= xBegin);
-        var end = points.FindIndex(0, points.Count - 1, p => p.X <= xEnd);
+        var end = points.FindLastIndex(0, points.Count - 1, p => p.X <= xEnd);
         return new XrayPeak(points.GetRange(begin, end));
     }
 }
