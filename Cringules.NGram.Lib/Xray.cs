@@ -34,14 +34,14 @@ public class Xray
     /// TODO: Метод для выделения примерных границ пиков графика.
     /// </summary>
     /// <returns>Список координат по X - границ пиков.</returns>
-    public List<Point> GetPeakCoords()
+    public List<Point> GetPeakBoundaries()
     {
         List<Point> coordsList = new() { points[0] };
 
         // не менять на LINQ-запрос, я мб тут чет умнее придумаю:D
-        for (var i = 0; i < points.Count; i++)
+        for (var i = 1; i < points.Count - 1; i++)
         {
-            if (points[i - 1].Y < points[i].Y && points[i + 1].Y < points[i].Y)
+            if (points[i - 1].Y > points[i].Y && points[i + 1].Y > points[i].Y)
             {
                 coordsList.Add(points[i]);
             }
