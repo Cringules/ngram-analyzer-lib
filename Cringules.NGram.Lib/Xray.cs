@@ -60,8 +60,8 @@ public class Xray
     /// <returns>Объект класса XrayPeak - выделенный пик.</returns>
     public XrayPeak GetPeak(double xBegin, double xEnd)
     {
-        var begin = points.FindIndex(0, points.Count, p => p.X >= xBegin);
-        var end = points.FindLastIndex(0, points.Count, p => p.X <= xEnd);
+        var begin = points.FindIndex(p => p.X >= xBegin);
+        var end = points.FindLastIndex(p => p.X <= xEnd);
         return new XrayPeak(points.GetRange(begin, end - begin + 1));
     }
 }
