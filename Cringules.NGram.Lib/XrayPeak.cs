@@ -10,12 +10,12 @@ public class XrayPeak
     /// <summary>
     /// Список точек.
     /// </summary>
-    public List<Point> points { get; }
+    public List<Point> Points { get; }
 
     /// <summary>
     /// Уровень фона.
     /// </summary>
-    public double backgroundLevel { get; private set; } // как нормально эти переменные называть XD
+    public double BackgroundLevel { get; private set; } // как нормально эти переменные называть XD
 
     /// <summary>
     /// Конструктор класса, принимает на вход список точек пика.
@@ -23,8 +23,8 @@ public class XrayPeak
     /// <param name="points">Список точек пика.</param>
     public XrayPeak(IEnumerable<Point> points)
     {
-        this.points = new List<Point>(points);
-        backgroundLevel = this.points[0].Y;
+        Points = new List<Point>(points);
+        BackgroundLevel = Points[0].Y;
     }
 
     /// <summary>
@@ -33,7 +33,7 @@ public class XrayPeak
     /// <returns>Угол при максимальном значении пика (координата по X).</returns>
     public Point GetPeakTop()
     {
-        return points[points.FindIndex(p => Math.Abs(p.Y - points.Max(p0 => p0.Y)) < Tolerance)];
+        return Points[Points.FindIndex(p => Math.Abs(p.Y - Points.Max(p0 => p0.Y)) < Tolerance)];
     }
 
     /// <summary>
@@ -42,8 +42,8 @@ public class XrayPeak
     /// <returns>Новый уровень фона - самое левое значение пика.</returns>
     public double GetLeftYValue()
     {
-        backgroundLevel = points[0].Y;
-        return backgroundLevel;
+        BackgroundLevel = Points[0].Y;
+        return BackgroundLevel;
     }
 
     /// <summary>
@@ -52,8 +52,8 @@ public class XrayPeak
     /// <returns>Новый уровень фона - самое правое значение пика.</returns>
     public double GetRightYValue()
     {
-        backgroundLevel = points[^1].Y;
-        return backgroundLevel;
+        BackgroundLevel = Points[^1].Y;
+        return BackgroundLevel;
     }
 
     /// <summary>
@@ -64,7 +64,7 @@ public class XrayPeak
     /// <param name="newBackgroundLevel">Новое значение фона.</param>
     public void SetBackgroundLevel(double newBackgroundLevel)
     {
-        backgroundLevel = newBackgroundLevel;
+        BackgroundLevel = newBackgroundLevel;
     }
 
     /// <summary>
@@ -74,8 +74,8 @@ public class XrayPeak
     public XrayPeak SymmetrizePeakLeft()
     {
         List<Point> newPoints =
-            new(points.GetRange(0,
-                points.FindIndex(p => Math.Abs(p.Y - points.Max(p0 => p0.Y)) < Tolerance)));
+            new(Points.GetRange(0,
+                Points.FindIndex(p => Math.Abs(p.Y - Points.Max(p0 => p0.Y)) < Tolerance)));
         List<Point> symmetricalPoints = new(newPoints);
         symmetricalPoints.Reverse();
         var xTop = GetPeakTop().X;
@@ -92,8 +92,8 @@ public class XrayPeak
     public XrayPeak SymmetrizePeakRight()
     {
         List<Point> newPoints =
-            new(points.GetRange(0,
-                points.FindIndex(p => Math.Abs(p.Y - points.Max(p0 => p0.Y)) < Tolerance)));
+            new(Points.GetRange(0,
+                Points.FindIndex(p => Math.Abs(p.Y - Points.Max(p0 => p0.Y)) < Tolerance)));
         List<Point> symmetricalPoints = new(newPoints);
         symmetricalPoints.Reverse();
         var xTop = GetPeakTop().X;
