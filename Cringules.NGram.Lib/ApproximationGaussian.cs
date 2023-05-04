@@ -3,7 +3,7 @@
 /// <summary>
 /// Класс, реализующий аппроксимацию пика по Гауссу.
 /// </summary>
-public class ApproximationGaussian : IAutoApproximator, IManualApproximator
+public class ApproximationGaussian : IApproximator
 {
     /// <summary>
     /// TODO: Метод для автоматической аппроксимации пика по Гауссу.
@@ -11,7 +11,7 @@ public class ApproximationGaussian : IAutoApproximator, IManualApproximator
     /// <returns>Новый пик.</returns>
     public XrayPeak ApproximatePeakAuto(XrayPeak peak)
     {
-        return new XrayPeak(peak.points);
+        return new XrayPeak(peak.Points);
     }
 
     /// <summary>
@@ -21,6 +21,6 @@ public class ApproximationGaussian : IAutoApproximator, IManualApproximator
     public XrayPeak ApproximatePeakManual(XrayPeak peak, double height, double width,
         double corr, double lambda = 0)
     {
-        return new XrayPeak(peak.points);
+        return new XrayPeak(peak.Points);
     }
 }

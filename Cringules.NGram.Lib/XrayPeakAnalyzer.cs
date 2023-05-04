@@ -26,7 +26,7 @@ public class XrayPeakAnalyzer
     /// <returns>Максимальная интенсивность.</returns>
     public double GetIntensityMax()
     {
-        return _peak.GetPeakTop().Y - _peak.backgroundLevel; // тут же надо вычитать, или не надо, хмхм
+        return _peak.GetPeakTop().Y - _peak.BackgroundLevel; // тут же надо вычитать, или не надо, хмхм
     }
     
     /// <summary>
