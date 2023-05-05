@@ -52,29 +52,43 @@ public class Xray
     }
 
     /// <summary>
-    /// TODO: Метод для выделения примерных границ пиков графика.
+    /// Метод для выделения примерных границ пиков графика.
     /// </summary>
     /// <returns>Список координат по X - границ пиков.</returns>
     public List<Point> GetPeakBoundaries()
     {
-        List<Point> coordsList = new() { Points[0] };
+        List<Point> peakBoundaries = new() { Points[0] };
+        
+        // Показатель того, что мы в начале дифрактограммы - надо узнать, в данный момент пик растет или уменьшается.
+        bool isChecking = true;
+        // Показатель состояния пика - true, если растет, иначе false.
+        bool isRaising = true;
 
-        // не менять на LINQ-запрос, я мб тут чет умнее придумаю:D
         for (var i = 1; i < Points.Count - 1; i++)
         {
-            if (Points[i - 1].Y > Points[i].Y && Points[i + 1].Y > Points[i].Y)
+            if (isChecking && Points[i - 1].Y != Points[i].Y)
             {
-                coordsList.Add(Points[i]);
+                isRaising = (Points[i - 1].Y < Points[i].Y);
+                isChecking = false;
+            }
+            else if (isRaising && Points[i - 1].Y > Points[i].Y)
+            {
+                isRaising = false;
+            }
+            else if (!isRaising && Points[i - 1].Y < Points[i].Y)
+            {
+                peakBoundaries.Add(Points[i - 1]);
+                isRaising = true;
             }
         }
-
-        coordsList.Add(Points[^1]);
         
-        return coordsList;
+        peakBoundaries.Add(Points[^1]);
+
+        return peakBoundaries;
     }
 
     /// <summary>
-    /// TODO: Метод для выделения пика по заданным координатам (по X) начала и конца.
+    /// Метод для выделения пика по заданным координатам (по X) начала и конца.
     /// </summary>
     /// <param name="xBegin">Координата начала по X.</param>
     /// <param name="xEnd">Координата конца по X.</param>
