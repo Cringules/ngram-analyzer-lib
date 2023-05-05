@@ -8,7 +8,7 @@ public class Xray
     /// <summary>
     /// Список точек.
     /// </summary>
-    public List<Point> points { get; }
+    public List<Point> Points { get; }
 
     /// <summary>
     /// Конструктор класса, принимает на вход два списка координат точек графика.
@@ -16,7 +16,7 @@ public class Xray
     /// <param name="points">Список точек пика.</param>
     public Xray(IEnumerable<Point> points)
     {
-        this.points = new List<Point>(points);
+        this.Points = new List<Point>(points);
     }
 
     /// <summary>
@@ -26,7 +26,7 @@ public class Xray
     /// <returns>Новый экземпляр класса - сглаженный график.</returns>
     public Xray SmoothXray()
     {
-        Xray newXray = new(points);
+        Xray newXray = new(Points);
         return newXray;
     }
 
@@ -36,18 +36,18 @@ public class Xray
     /// <returns>Список координат по X - границ пиков.</returns>
     public List<Point> GetPeakBoundaries()
     {
-        List<Point> coordsList = new() { points[0] };
+        List<Point> coordsList = new() { Points[0] };
 
         // не менять на LINQ-запрос, я мб тут чет умнее придумаю:D
-        for (var i = 1; i < points.Count - 1; i++)
+        for (var i = 1; i < Points.Count - 1; i++)
         {
-            if (points[i - 1].Y > points[i].Y && points[i + 1].Y > points[i].Y)
+            if (Points[i - 1].Y > Points[i].Y && Points[i + 1].Y > Points[i].Y)
             {
-                coordsList.Add(points[i]);
+                coordsList.Add(Points[i]);
             }
         }
 
-        coordsList.Add(points[^1]);
+        coordsList.Add(Points[^1]);
         
         return coordsList;
     }
@@ -60,8 +60,8 @@ public class Xray
     /// <returns>Объект класса XrayPeak - выделенный пик.</returns>
     public XrayPeak GetPeak(double xBegin, double xEnd)
     {
-        var begin = points.FindIndex(p => p.X >= xBegin);
-        var end = points.FindLastIndex(p => p.X <= xEnd);
-        return new XrayPeak(points.GetRange(begin, end - begin + 1));
+        var begin = Points.FindIndex(p => p.X >= xBegin);
+        var end = Points.FindLastIndex(p => p.X <= xEnd);
+        return new XrayPeak(Points.GetRange(begin, end - begin + 1));
     }
 }
