@@ -1,3 +1,6 @@
+using Python.Included;
+using Python.Runtime;
+
 namespace Cringules.NGram.Lib;
 
 /// <summary>
@@ -17,16 +20,34 @@ public class Xray
     public Xray(IEnumerable<Point> points)
     {
         this.Points = new List<Point>(points);
+        Installer.SetupPython();
+        Installer.PipInstallModule("scipy");
     }
-
+    
     /// <summary>
-    /// TODO: Метод для сглаживания графика.
-    /// TODO: Может быть тут добавим параметр для сглаживания, я еще не решила.
+    /// Метод для сглаживания графика c помощью алгоритма Савицкого-Голея.
     /// </summary>
+    /// <param name="coefficient">Коэффициент сглаживания графика.</param>
     /// <returns>Новый экземпляр класса - сглаженный график.</returns>
-    public Xray SmoothXray()
+    public Xray SmoothXray(int coefficient)
     {
-        Xray newXray = new(Points);
+        PythonEngine.Initialize();
+        dynamic sig = Py.Import("scipy.signal");
+        
+        var y = Points.Select(x => x.Y).ToList();
+        var newY = new List<double>();
+        
+        dynamic smoothedY = (sig.savgol_filter(y, coefficient, 2));
+        foreach (double el in smoothedY)
+        {
+            newY.Add(el);
+        }
+        
+        PythonEngine.Shutdown();
+
+        List<Point> newPoints = Points.Select((t, i) => new Point(t.X, newY[i])).ToList();
+
+        Xray newXray = new(newPoints);
         return newXray;
     }
 
