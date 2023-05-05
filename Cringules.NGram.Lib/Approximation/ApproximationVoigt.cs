@@ -1,12 +1,12 @@
-﻿namespace Cringules.NGram.Lib.approximation;
+﻿namespace Cringules.NGram.Lib.Approximation;
 
 /// <summary>
-/// Класс, реализующий аппроксимацию пика по Лоренцу.
+/// Класс, реализующий аппроксимацию пика по Войту.
 /// </summary>
-public class ApproximationLorentz : IApproximator
+public class ApproximationVoigt : IApproximator
 {
     /// <summary>
-    /// TODO: Метод для автоматической аппроксимации пика по Лоренцу.
+    /// TODO: Метод для автоматической аппроксимации пика по Войту.
     /// </summary>
     /// <returns>Новый пик.</returns>
     public XrayPeak ApproximatePeakAuto(XrayPeak peak)
@@ -15,7 +15,7 @@ public class ApproximationLorentz : IApproximator
     }
 
     /// <summary>
-    /// TODO: Метод для ручной аппроксимации пика по Лоренцу.
+    /// TODO: Метод для ручной аппроксимации пика по Войту.
     /// </summary>
     /// <returns>Новый пик.</returns>
     public XrayPeak ApproximatePeakManual(XrayPeak peak, double height, double width,
