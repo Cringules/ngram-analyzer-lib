@@ -1,4 +1,4 @@
-﻿namespace Cringules.NGram.Lib;
+﻿namespace Cringules.NGram.Lib.Approximation;
 
 /// <summary>
 /// Интерфейс для классов-аппроксиматоров (объединение автоматической и ручной аппроксимации).

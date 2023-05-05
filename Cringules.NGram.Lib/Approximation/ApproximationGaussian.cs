@@ -1,4 +1,4 @@
-﻿namespace Cringules.NGram.Lib;
+﻿namespace Cringules.NGram.Lib.Approximation;
 
 /// <summary>
 /// Класс, реализующий аппроксимацию пика по Гауссу.
