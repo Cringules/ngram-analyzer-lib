@@ -20,6 +20,7 @@ public class Xray
     public Xray(IEnumerable<Point> points)
     {
         this.Points = new List<Point>(points);
+        
         Installer.SetupPython();
         Installer.PipInstallModule("scipy");
     }
