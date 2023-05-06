@@ -25,7 +25,7 @@ public class XrayPeakAnalyzer
     /// Последняя полученная расчетная интенсивность.
     /// </summary>
     private double _intensityApproximated = 1;
-    
+
     /// <summary>
     /// Последнее полученное межплоскостное расстояние
     /// </summary>
@@ -58,7 +58,7 @@ public class XrayPeakAnalyzer
         double intensity = 0;
         for (int i = 0; i < _peak.Points.Count - 1; i++)
         {
-            intensity += (_peak.Points[i + 1].X - _peak.Points[i].X) * 
+            intensity += (_peak.Points[i + 1].X - _peak.Points[i].X) *
                          (_peak.Points[i].Y - _peak.BackgroundLevel);
         }
 
@@ -75,12 +75,12 @@ public class XrayPeakAnalyzer
         double intensity = 0;
         for (int i = 0; i < approximation.Points.Count - 1; i++)
         {
-            intensity += (approximation.Points[i + 1].X - approximation.Points[i].X) * 
+            intensity += (approximation.Points[i + 1].X - approximation.Points[i].X) *
                          (approximation.Points[i].Y - _peak.BackgroundLevel);
         }
 
         _intensityApproximated = intensity;
-        
+
         return intensity;
     }
 
@@ -109,11 +109,11 @@ public class XrayPeakAnalyzer
     public double GetPeakWidth()
     {
         double halfHeight = (_peak.GetPeakTop().Y + _peak.BackgroundLevel) / 2;
-        
+
         return _peak.Points.FindLast(p => p.Y >= halfHeight).X -
                _peak.Points.Find(p => p.Y >= halfHeight).X;
     }
-    
+
     /// <summary>
     /// Метод для получения угла отражения.
     /// </summary>

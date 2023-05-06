@@ -33,18 +33,18 @@ public class Xray
         {
             return new Xray(Points);
         }
-        
+
         PythonEngine.Initialize();
 
         var y = Points.Select(x => x.Y).ToList();
         var newY = new List<double>();
-        
+
         dynamic smoothedY = (PyLibs.SciPySignal.savgol_filter(y, coefficient, 2));
         foreach (double el in smoothedY)
         {
             newY.Add(el);
         }
-        
+
         PythonEngine.Shutdown();
 
         List<Point> newPoints = Points.Select((t, i) => new Point(t.X, newY[i])).ToList();
@@ -60,7 +60,7 @@ public class Xray
     public List<Point> GetPeakBoundaries()
     {
         List<Point> peakBoundaries = new() { Points[0] };
-        
+
         // Показатель того, что мы в начале дифрактограммы - надо узнать, в данный момент пик растет или уменьшается.
         bool isChecking = true;
         // Показатель состояния пика - true, если растет, иначе false.
@@ -83,7 +83,7 @@ public class Xray
                 isRaising = true;
             }
         }
-        
+
         peakBoundaries.Add(Points[^1]);
 
         return peakBoundaries;

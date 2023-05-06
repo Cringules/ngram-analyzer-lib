@@ -12,12 +12,12 @@ public class PyLibs
     /// Библиотека numpy.
     /// </summary>
     public static dynamic NumPy { get; }
-    
+
     /// <summary>
     /// Библиотека scipy.
     /// </summary>
     public static dynamic SciPy { get; }
-    
+
     /// <summary>
     /// Подмодуль scipy.signal.
     /// </summary>
@@ -34,16 +34,18 @@ public class PyLibs
     static PyLibs()
     {
         Installer.SetupPython();
-        
-        Installer.InstallWheel(typeof(PyLibs).Assembly, "numpy-1.24.3-cp311-cp311-win_amd64.whl").Wait();
-        Installer.InstallWheel(typeof(PyLibs).Assembly, "scipy-1.10.1-cp311-cp311-win_amd64.whl").Wait();
+
+        Installer.InstallWheel(typeof(PyLibs).Assembly, "numpy-1.24.3-cp311-cp311-win_amd64.whl")
+            .Wait();
+        Installer.InstallWheel(typeof(PyLibs).Assembly, "scipy-1.10.1-cp311-cp311-win_amd64.whl")
+            .Wait();
 
         PythonEngine.Initialize();
-        
+
         NumPy = Py.Import("numpy");
         SciPy = Py.Import("scipy");
         SciPySignal = Py.Import("scipy.signal");
-        
+
         PythonEngine.Shutdown();
 
         isInstalled = true;
