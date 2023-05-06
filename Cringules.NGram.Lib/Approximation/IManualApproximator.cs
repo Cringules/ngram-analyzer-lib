@@ -14,6 +14,6 @@ public interface IManualApproximator
     /// <param name="corr">Параметр корреляции.</param>
     /// <param name="lambda">Опциональный параметр.</param>
     /// <returns>Новый пик.</returns>
-    public XrayPeak ApproximatePeakManual(XrayPeak peak, double height, double width,
+    public ApproximationResult ApproximatePeakManual(XrayPeak peak, double height, double width,
         double corr, double lambda = 0);
 }

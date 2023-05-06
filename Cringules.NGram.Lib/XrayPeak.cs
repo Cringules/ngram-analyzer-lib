@@ -1,3 +1,6 @@
+using Python.Included;
+using Python.Runtime;
+
 namespace Cringules.NGram.Lib;
 
 /// <summary>
@@ -5,8 +8,6 @@ namespace Cringules.NGram.Lib;
 /// </summary>
 public class XrayPeak
 {
-    private const double Tolerance = 0.000001;
-
     /// <summary>
     /// Список точек.
     /// </summary>
@@ -15,7 +16,7 @@ public class XrayPeak
     /// <summary>
     /// Уровень фона.
     /// </summary>
-    public double BackgroundLevel { get; private set; } // как нормально эти переменные называть XD
+    public double BackgroundLevel { get; private set; }
 
     /// <summary>
     /// Конструктор класса, принимает на вход список точек пика.
@@ -33,7 +34,7 @@ public class XrayPeak
     /// <returns>Угол при максимальном значении пика (координата по X).</returns>
     public Point GetPeakTop()
     {
-        return Points[Points.FindIndex(p => Math.Abs(p.Y - Points.Max(p0 => p0.Y)) < Tolerance)];
+        return Points[Points.FindIndex(p => p.Y == Points.Max(p0 => p0.Y))];
     }
 
     /// <summary>
@@ -57,14 +58,20 @@ public class XrayPeak
     }
 
     /// <summary>
-    /// TODO: Метод для ручной установки уровня фона.
-    /// TODO: Можно сделать методом, возвращающим bool, чтобы была проверка на уровень фона не больше вершины.
-    /// TODO: А может backgroundLevel свойством сделать...
+    /// Метод для ручной установки уровня фона.
     /// </summary>
     /// <param name="newBackgroundLevel">Новое значение фона.</param>
-    public void SetBackgroundLevel(double newBackgroundLevel)
+    /// <returns>True, если новый уровень в допустимых интервалах, иначе false.</returns>
+    public bool SetBackgroundLevel(double newBackgroundLevel)
     {
+        if (newBackgroundLevel < Math.Max(Points[0].Y, Points[^1].Y) ||
+            newBackgroundLevel >= GetPeakTop().Y)
+        {
+            return false;
+        }
+
         BackgroundLevel = newBackgroundLevel;
+        return true;
     }
 
     /// <summary>
@@ -74,8 +81,7 @@ public class XrayPeak
     public XrayPeak SymmetrizePeakLeft()
     {
         List<Point> newPoints =
-            new(Points.GetRange(0,
-                Points.FindIndex(p => Math.Abs(p.Y - Points.Max(p0 => p0.Y)) < Tolerance)));
+            new(Points.GetRange(0, Points.FindIndex(p => p.Y == GetPeakTop().Y)));
         List<Point> symmetricalPoints = new(newPoints);
         symmetricalPoints.Reverse();
         var xTop = GetPeakTop().X;
@@ -92,8 +98,7 @@ public class XrayPeak
     public XrayPeak SymmetrizePeakRight()
     {
         List<Point> newPoints =
-            new(Points.GetRange(0,
-                Points.FindIndex(p => Math.Abs(p.Y - Points.Max(p0 => p0.Y)) < Tolerance)));
+            new(Points.GetRange(0, Points.FindIndex(p => p.Y == GetPeakTop().Y)));
         List<Point> symmetricalPoints = new(newPoints);
         symmetricalPoints.Reverse();
         var xTop = GetPeakTop().X;

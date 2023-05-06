@@ -1,4 +1,7 @@
-﻿namespace Cringules.NGram.Lib.Approximation;
+﻿using Python.Included;
+using Python.Runtime;
+
+namespace Cringules.NGram.Lib.Approximation;
 
 /// <summary>
 /// Класс, реализующий аппроксимацию пика по Лоренцу.
@@ -9,18 +12,18 @@ public class ApproximationLorentz : IApproximator
     /// TODO: Метод для автоматической аппроксимации пика по Лоренцу.
     /// </summary>
     /// <returns>Новый пик.</returns>
-    public XrayPeak ApproximatePeakAuto(XrayPeak peak)
+    public ApproximationResult ApproximatePeakAuto(XrayPeak peak)
     {
-        return new XrayPeak(peak.Points);
+        return new ApproximationResult(peak.Points);
     }
 
     /// <summary>
     /// TODO: Метод для ручной аппроксимации пика по Лоренцу.
     /// </summary>
     /// <returns>Новый пик.</returns>
-    public XrayPeak ApproximatePeakManual(XrayPeak peak, double height, double width,
+    public ApproximationResult ApproximatePeakManual(XrayPeak peak, double height, double width,
         double corr, double lambda = 0)
     {
-        return new XrayPeak(peak.Points);
+        return new ApproximationResult(peak.Points);
     }
 }

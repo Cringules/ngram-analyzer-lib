@@ -10,5 +10,5 @@ public interface IAutoApproximator
     /// </summary>
     /// <param name="peak">Аппроксимируемый пик.</param>
     /// <returns>Новый пик.</returns>
-    public XrayPeak ApproximatePeakAuto(XrayPeak peak);
+    public ApproximationResult ApproximatePeakAuto(XrayPeak peak);
 }
