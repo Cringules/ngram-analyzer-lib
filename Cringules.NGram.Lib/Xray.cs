@@ -20,11 +20,8 @@ public class Xray
     public Xray(IEnumerable<Point> points)
     {
         this.Points = new List<Point>(points);
-        
-        Installer.SetupPython();
-        Installer.PipInstallModule("scipy");
     }
-    
+
     /// <summary>
     /// Метод для сглаживания графика c помощью алгоритма Савицкого-Голея.
     /// </summary>
@@ -32,13 +29,17 @@ public class Xray
     /// <returns>Новый экземпляр класса - сглаженный график.</returns>
     public Xray SmoothXray(int coefficient)
     {
-        PythonEngine.Initialize();
-        dynamic sig = Py.Import("scipy.signal");
+        if (!PyLibs.isInstalled)
+        {
+            return new Xray(Points);
+        }
         
+        PythonEngine.Initialize();
+
         var y = Points.Select(x => x.Y).ToList();
         var newY = new List<double>();
         
-        dynamic smoothedY = (sig.savgol_filter(y, coefficient, 2));
+        dynamic smoothedY = (PyLibs.SciPySignal.savgol_filter(y, coefficient, 2));
         foreach (double el in smoothedY)
         {
             newY.Add(el);
