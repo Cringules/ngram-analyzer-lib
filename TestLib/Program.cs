@@ -1133,10 +1133,10 @@ public class Program
 
         List<Point> points = x.Select((t, i) => new Point(t, y[i])).ToList();
         Xray xray = new Xray(points);
-        Xray newXray = xray.SmoothXray(70);
-        foreach (var point in newXray.Points)
+        Xray newXray = xray.SmoothXray(90);
+        foreach (var point in newXray.GetPeakBoundaries())
         {
-            Console.WriteLine(point.Y);
+            Console.WriteLine(point.X);
         }
     }
 }

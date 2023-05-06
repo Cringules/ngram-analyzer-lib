@@ -8,12 +8,12 @@ public struct Point
     /// <summary>
     /// Координата по оси абсцисс.
     /// </summary>
-    public double X { get; set; }
+    public double X { get; }
 
     /// <summary>
     /// Координата по оси ординат.
     /// </summary>
-    public double Y { get; set; }
+    public double Y { get; }
 
     /// <summary>
     /// Конструктор точки.
