@@ -9,15 +9,6 @@ namespace Cringules.NGram.Lib.Approximation;
 public class ApproximationVoigt : IApproximator
 {
     /// <summary>
-    /// Конструктор, запускающий виртуальный интерпретатор Python + установка модуля scipy.
-    /// </summary>
-    public ApproximationVoigt()
-    {
-        Installer.SetupPython();
-        Installer.PipInstallModule("scipy");
-    }
-    
-    /// <summary>
     /// TODO: Метод для автоматической аппроксимации пика по Войту.
     /// </summary>
     /// <returns>Новый пик.</returns>

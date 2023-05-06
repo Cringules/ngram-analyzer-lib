@@ -9,15 +9,6 @@ namespace Cringules.NGram.Lib.Approximation;
 public class ApproximationGaussian : IApproximator
 {
     /// <summary>
-    /// Конструктор, запускающий виртуальный интерпретатор Python + установка модуля scipy.
-    /// </summary>
-    public ApproximationGaussian()
-    {
-        Installer.SetupPython();
-        Installer.PipInstallModule("scipy");
-    }
-    
-    /// <summary>
     /// Метод для автоматической аппроксимации пика по Гауссу.
     /// </summary>
     /// <returns>Новый пик.</returns>

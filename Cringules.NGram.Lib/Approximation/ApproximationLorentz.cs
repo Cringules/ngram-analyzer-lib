@@ -9,15 +9,6 @@ namespace Cringules.NGram.Lib.Approximation;
 public class ApproximationLorentz : IApproximator
 {
     /// <summary>
-    /// Конструктор, запускающий виртуальный интерпретатор Python + установка модуля scipy.
-    /// </summary>
-    public ApproximationLorentz()
-    {
-        Installer.SetupPython();
-        Installer.PipInstallModule("scipy");
-    }
-    
-    /// <summary>
     /// TODO: Метод для автоматической аппроксимации пика по Лоренцу.
     /// </summary>
     /// <returns>Новый пик.</returns>
