@@ -1141,7 +1141,6 @@ public class Program
         peak.SetBackgroundLevel(1500);
 
         XrayPeakAnalyzer peakAnalyzer = new XrayPeakAnalyzer();
-        Console.WriteLine(peakAnalyzer.GetIntensityIntegral(peak));
         ApproximationGaussian apr = new ApproximationGaussian();
         peakAnalyzer.GetInterplanarDistance(peak, 1.54056);
         Console.WriteLine(peakAnalyzer.GetIntensityApproximated(peak, apr.ApproximatePeakAuto(peak)));
