@@ -11,14 +11,16 @@ public class ApproximationGaussian : IApproximator
     /// <summary>
     /// Метод для автоматической аппроксимации пика по Гауссу.
     /// </summary>
-    /// <returns>Новый пик.</returns>
+    /// <param name="peak">Исследуемый пик.</param>
+    /// <returns>Результат аппроксимации.</returns>
     public ApproximationResult ApproximatePeakAuto(XrayPeak peak)
     {
+        var peakAnalyzer = new XrayPeakAnalyzer();
+        
         var peakTopX = peak.GetPeakTop().X;
-        var peakTopY = (new XrayPeakAnalyzer()).GetIntensityMaximum(peak);
-        var integralBreadth = 0.5 * (new XrayPeakAnalyzer()).GetPeakWidth(peak) *
+        var peakTopY = peakAnalyzer.GetIntensityMaximum(peak);
+        var integralBreadth = 0.5 * peakAnalyzer.GetPeakWidth(peak) *
                               Math.Pow(Math.PI / Math.Log(2), 0.5);
-        Console.WriteLine(peakTopX + " " + peakTopY + " " + integralBreadth);
 
         var newPoints = (from point in peak.Points
             select point.X
@@ -32,7 +34,7 @@ public class ApproximationGaussian : IApproximator
     /// <summary>
     /// TODO: Метод для ручной аппроксимации пика по Гауссу.
     /// </summary>
-    /// <returns>Новый пик.</returns>
+    /// <returns>Результат аппроксимации.</returns>
     public ApproximationResult ApproximatePeakManual(XrayPeak peak, double height, double width,
         double corr, double lambda = 0)
     {
