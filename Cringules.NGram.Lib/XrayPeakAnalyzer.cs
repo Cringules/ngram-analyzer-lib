@@ -136,7 +136,7 @@ public class XrayPeakAnalyzer
     /// <returns></returns>
     public double GetInterplanarDistance(double lambda)
     {
-        _interplanarDistance = lambda / (2 * Math.Sin(GetTopAngle()));
+        _interplanarDistance = lambda / (2 * Math.Sin(GetTopAngle() / 2));
         return _interplanarDistance;
     }
 
