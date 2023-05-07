@@ -65,7 +65,7 @@ public class XrayPeakAnalyzer
             }
         }
 
-        return intensity * Math.PI / 180;
+        return intensity;
     }
 
     /// <summary>
@@ -85,7 +85,7 @@ public class XrayPeakAnalyzer
             }
         }
 
-        _intensityApproximated = intensity * Math.PI / 180;
+        _intensityApproximated = intensity;
 
         return _intensityApproximated;
     }
@@ -105,7 +105,7 @@ public class XrayPeakAnalyzer
     /// <returns>Интегральная ширина.</returns>
     public double GetIntegralWidth()
     {
-        return GetIntensityIntegral() / GetIntensityMaximum();
+        return (GetIntensityIntegral() / GetIntensityMaximum());
     }
 
     /// <summary>
@@ -146,6 +146,8 @@ public class XrayPeakAnalyzer
     /// <returns>Структура характеристик.</returns>
     public PeakInfo GetPeakInfo()
     {
-        return new PeakInfo();
+        return new PeakInfo(GetIntensityMaximum(), GetIntensityIntegral(), _intensityApproximated,
+            GetIntensityDifference(), GetIntegralWidth(), GetPeakWidth(), GetTopAngle(),
+            _interplanarDistance);
     }
 }

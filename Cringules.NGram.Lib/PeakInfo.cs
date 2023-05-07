@@ -60,7 +60,7 @@ public struct PeakInfo
         double intensityDifference, double integralWidth, double peakWidth, double topAngle,
         double interplanarDistance)
     {
-        IntensityMaximum = intensityDifference;
+        IntensityMaximum = intensityMaximum;
         IntensityIntegral = intensityIntegral;
         IntensityApproximated = intensityApproximated;
         IntensityDifference = intensityDifference;

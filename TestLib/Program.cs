@@ -1134,7 +1134,7 @@ public class Program
 
         List<Point> points = x.Select((t, i) => new Point(t, y[i])).ToList();
         Xray xray = new Xray(points);
-        Xray newXray = xray.SmoothXray(90);
+        Xray newXray = xray.SmoothXray(70);
 
         XrayPeak peak = newXray.GetPeak(20, 30);
         peak = peak.SymmetrizePeakLeft();
@@ -1143,6 +1143,9 @@ public class Program
         XrayPeakAnalyzer peakAnalyzer = new XrayPeakAnalyzer(peak);
         Console.WriteLine(peakAnalyzer.GetIntensityIntegral());
         ApproximationGaussian apr = new ApproximationGaussian();
+        peakAnalyzer.GetInterplanarDistance(1.54056);
+        Console.WriteLine(peakAnalyzer.GetIntensityApproximated(apr.ApproximatePeakAuto(peak)));
+        PeakInfo peakInfo = peakAnalyzer.GetPeakInfo();
         Console.WriteLine(peakAnalyzer.GetIntensityApproximated(apr.ApproximatePeakAuto(peak)));
     }
 }
