@@ -65,7 +65,7 @@ public class XrayPeakAnalyzer
             }
         }
 
-        return intensity;
+        return intensity * Math.PI / 180;
     }
 
     /// <summary>
@@ -85,7 +85,7 @@ public class XrayPeakAnalyzer
             }
         }
 
-        _intensityApproximated = intensity;
+        _intensityApproximated = intensity * Math.PI / 180;
 
         return _intensityApproximated;
     }
@@ -136,7 +136,7 @@ public class XrayPeakAnalyzer
     /// <returns></returns>
     public double GetInterplanarDistance(double lambda)
     {
-        _interplanarDistance = lambda / (2 * Math.Sin(GetTopAngle()));
+        _interplanarDistance = lambda / (2 * Math.Sin(GetTopAngle() * Math.PI / 360));
         return _interplanarDistance;
     }
 
