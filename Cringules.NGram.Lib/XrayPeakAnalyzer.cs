@@ -17,51 +17,28 @@ namespace Cringules.NGram.Lib;
 public class XrayPeakAnalyzer
 {
     /// <summary>
-    /// Исследуемый пик.
-    /// </summary>
-    private XrayPeak _peak;
-
-    /// <summary>
-    /// Последняя полученная расчетная интенсивность.
-    /// </summary>
-    private double _intensityApproximated = 1;
-
-    /// <summary>
-    /// Последнее полученное межплоскостное расстояние
-    /// </summary>
-    private double _interplanarDistance = 1;
-
-    /// <summary>
-    /// Конструктор класса.
-    /// </summary>
-    /// <param name="peak">Исследуемый пик.</param>
-    public XrayPeakAnalyzer(XrayPeak peak)
-    {
-        this._peak = peak; // тут копировать или так оставить?
-    }
-
-    /// <summary>
     /// Метод для получения максимальной интенсивности.
     /// </summary>
     /// <returns>Максимальная интенсивность.</returns>
-    public double GetIntensityMaximum()
+    public double GetIntensityMaximum(XrayPeak peak)
     {
-        return _peak.GetPeakTop().Y - _peak.BackgroundLevel;
+        return peak.GetPeakTop().Y - peak.BackgroundLevel;
     }
 
-    /// <summary>
+    /// /// <summary>
     /// Метод для получения измеренной интегральной интенсивности.
     /// </summary>
+    /// <param name="peak">Исследуемый пик.</param>
     /// <returns>Измеренная интегральная интенсивность.</returns>
-    public double GetIntensityIntegral()
+    public double GetIntensityIntegral(XrayPeak peak)
     {
         double intensity = 0;
-        for (int i = 0; i < _peak.Points.Count - 1; i++)
+        for (int i = 0; i < peak.Points.Count - 1; i++)
         {
-            if (_peak.Points[i].Y > _peak.BackgroundLevel)
+            if (peak.Points[i].Y > peak.BackgroundLevel)
             {
-                intensity += (_peak.Points[i + 1].X - _peak.Points[i].X) *
-                             (_peak.Points[i].Y - _peak.BackgroundLevel);
+                intensity += (peak.Points[i + 1].X - peak.Points[i].X) *
+                             (peak.Points[i].Y - peak.BackgroundLevel);
             }
         }
 
@@ -71,83 +48,92 @@ public class XrayPeakAnalyzer
     /// <summary>
     /// Метод для получения расчетной интегральной интенсивности.
     /// </summary>
+    /// <param name="peak">Исследуемый пик.</param>
     /// <param name="approximation">Результат аппроксимации пика.</param>
     /// <returns>Расчетная интегральная интенсивность.</returns>
-    public double GetIntensityApproximated(ApproximationResult approximation)
+    public double GetIntensityApproximated(XrayPeak peak, ApproximationResult approximation)
     {
         double intensity = 0;
         for (int i = 0; i < approximation.Points.Count - 1; i++)
         {
-            if (_peak.Points[i].Y > _peak.BackgroundLevel)
+            if (peak.Points[i].Y > peak.BackgroundLevel)
             {
                 intensity += (approximation.Points[i + 1].X - approximation.Points[i].X) *
-                             (approximation.Points[i].Y - _peak.BackgroundLevel);
+                             (approximation.Points[i].Y - peak.BackgroundLevel);
             }
         }
 
-        _intensityApproximated = intensity;
-
-        return _intensityApproximated;
+        return intensity;
     }
 
     /// <summary>
     /// Метод для получения отношения эксп.интенсивности к расчетной.
     /// </summary>
+    /// <param name="peak">Исследуемый пик.</param>
+    /// <param name="approximation">Результат аппроксимации пика.</param>
     /// <returns>Отношение эксп.интенсивности к расчетной.</returns>
-    public double GetIntensityDifference()
+    public double GetIntensityDifference(XrayPeak peak, ApproximationResult approximation)
     {
-        return GetIntensityIntegral() / _intensityApproximated;
+        return GetIntensityIntegral(peak) / GetIntensityApproximated(peak, approximation);
     }
 
     /// <summary>
     /// Метод для получения интегральной ширины.
     /// </summary>
+    /// <param name="peak">Исследуемый пик.</param>
     /// <returns>Интегральная ширина.</returns>
-    public double GetIntegralWidth()
+    public double GetIntegralWidth(XrayPeak peak)
     {
-        return (GetIntensityIntegral() / GetIntensityMaximum());
+        return (GetIntensityIntegral(peak) / GetIntensityMaximum(peak));
     }
 
     /// <summary>
     /// Метод для получения ширины отражения на половине высоты пика.
     /// </summary>
+    /// <param name="peak">Исследуемый пик.</param>
     /// <returns>Ширина отражения на половине высоты пика.</returns>
-    public double GetPeakWidth()
+    public double GetPeakWidth(XrayPeak peak)
     {
-        double halfHeight = (_peak.GetPeakTop().Y + _peak.BackgroundLevel) / 2;
+        double halfHeight = (peak.GetPeakTop().Y + peak.BackgroundLevel) / 2;
 
-        return _peak.Points.FindLast(p => p.Y >= halfHeight).X -
-               _peak.Points.Find(p => p.Y >= halfHeight).X;
+        return peak.Points.FindLast(p => p.Y >= halfHeight).X -
+               peak.Points.Find(p => p.Y >= halfHeight).X;
     }
 
     /// <summary>
     /// Метод для получения угла отражения.
     /// </summary>
+    /// <param name="peak">Исследуемый пик.</param>
     /// <returns>Угол отражения.</returns>
-    public double GetTopAngle()
+    public double GetTopAngle(XrayPeak peak)
     {
-        return _peak.GetPeakTop().X;
+        return peak.GetPeakTop().X;
     }
 
     /// <summary>
     /// Метод для получения межплоскостного расстояния.
     /// </summary>
-    /// <param name="lambda"></param>
+    /// <param name="peak">Исследуемый пик.</param>
+    /// <param name="lambda">Длина волны.</param>
     /// <returns></returns>
-    public double GetInterplanarDistance(double lambda)
+    public double GetInterplanarDistance(XrayPeak peak, double lambda)
     {
-        _interplanarDistance = lambda / (2 * Math.Sin(GetTopAngle() * Math.PI / 360));
-        return _interplanarDistance;
+        return lambda / (2 * Math.Sin(GetTopAngle(peak) * Math.PI / 360));
     }
 
     /// <summary>
     /// Метод для получения структуры со всеми характеристиками пика.
     /// </summary>
+    /// <param name="peak">Исследуемый пик.</param>
+    /// <param name="approximation">Результат аппроксимации пика.</param>
+    /// <param name="lambda">Длина волны.</param>
     /// <returns>Структура характеристик.</returns>
-    public PeakInfo GetPeakInfo()
+    public PeakInfo GetPeakInfo(XrayPeak peak, ApproximationResult approximation, double lambda)
     {
-        return new PeakInfo(GetIntensityMaximum(), GetIntensityIntegral(), _intensityApproximated,
-            GetIntensityDifference(), GetIntegralWidth(), GetPeakWidth(), GetTopAngle(),
-            _interplanarDistance);
+        return new PeakInfo(GetIntensityMaximum(peak), GetIntensityIntegral(peak),
+            GetIntensityApproximated(peak, approximation),
+            GetIntensityDifference(peak, approximation),
+            GetIntegralWidth(peak), GetPeakWidth(peak), GetTopAngle(peak),
+            GetInterplanarDistance(peak, lambda));
     }
 }

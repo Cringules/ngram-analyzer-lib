@@ -1140,12 +1140,12 @@ public class Program
         peak = peak.SymmetrizePeakLeft();
         peak.SetBackgroundLevel(1500);
 
-        XrayPeakAnalyzer peakAnalyzer = new XrayPeakAnalyzer(peak);
-        Console.WriteLine(peakAnalyzer.GetIntensityIntegral());
+        XrayPeakAnalyzer peakAnalyzer = new XrayPeakAnalyzer();
+        Console.WriteLine(peakAnalyzer.GetIntensityIntegral(peak));
         ApproximationGaussian apr = new ApproximationGaussian();
-        peakAnalyzer.GetInterplanarDistance(1.54056);
-        Console.WriteLine(peakAnalyzer.GetIntensityApproximated(apr.ApproximatePeakAuto(peak)));
-        PeakInfo peakInfo = peakAnalyzer.GetPeakInfo();
-        Console.WriteLine(peakAnalyzer.GetIntensityApproximated(apr.ApproximatePeakAuto(peak)));
+        peakAnalyzer.GetInterplanarDistance(peak, 1.54056);
+        Console.WriteLine(peakAnalyzer.GetIntensityApproximated(peak, apr.ApproximatePeakAuto(peak)));
+        PeakInfo peakInfo = peakAnalyzer.GetPeakInfo(peak, apr.ApproximatePeakAuto(peak), 1.54056);
+        Console.WriteLine(peakAnalyzer.GetIntensityApproximated(peak, apr.ApproximatePeakAuto(peak)));
     }
 }
