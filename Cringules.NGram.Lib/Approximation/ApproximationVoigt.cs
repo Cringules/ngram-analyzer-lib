@@ -11,7 +11,8 @@ public class ApproximationVoigt : IApproximator
     /// <summary>
     /// TODO: Метод для автоматической аппроксимации пика по Войту.
     /// </summary>
-    /// <returns>Новый пик.</returns>
+    /// <param name="peak">Исследуемый пик.</param>
+    /// <returns>Результат аппроксимации.</returns>
     public ApproximationResult ApproximatePeakAuto(XrayPeak peak)
     {
         return new ApproximationResult(peak.Points);
@@ -20,7 +21,7 @@ public class ApproximationVoigt : IApproximator
     /// <summary>
     /// TODO: Метод для ручной аппроксимации пика по Войту.
     /// </summary>
-    /// <returns>Новый пик.</returns>
+    /// <returns>Результат аппроксимации.</returns>
     public ApproximationResult ApproximatePeakManual(XrayPeak peak, double height, double width,
         double corr, double lambda = 0)
     {
