@@ -29,7 +29,7 @@ public class XrayPeakAnalyzer
     /// <summary>
     /// Последнее полученное межплоскостное расстояние
     /// </summary>
-    private double _interplaneDistance = 1;
+    private double _interplanarDistance = 1;
 
     /// <summary>
     /// Конструктор класса.
@@ -58,8 +58,11 @@ public class XrayPeakAnalyzer
         double intensity = 0;
         for (int i = 0; i < _peak.Points.Count - 1; i++)
         {
-            intensity += (_peak.Points[i + 1].X - _peak.Points[i].X) *
-                         (_peak.Points[i].Y - _peak.BackgroundLevel);
+            if (_peak.Points[i].Y > _peak.BackgroundLevel)
+            {
+                intensity += (_peak.Points[i + 1].X - _peak.Points[i].X) *
+                             (_peak.Points[i].Y - _peak.BackgroundLevel);
+            }
         }
 
         return intensity;
@@ -75,13 +78,16 @@ public class XrayPeakAnalyzer
         double intensity = 0;
         for (int i = 0; i < approximation.Points.Count - 1; i++)
         {
-            intensity += (approximation.Points[i + 1].X - approximation.Points[i].X) *
-                         (approximation.Points[i].Y - _peak.BackgroundLevel);
+            if (_peak.Points[i].Y > _peak.BackgroundLevel)
+            {
+                intensity += (approximation.Points[i + 1].X - approximation.Points[i].X) *
+                             (approximation.Points[i].Y - _peak.BackgroundLevel);
+            }
         }
 
         _intensityApproximated = intensity;
 
-        return intensity;
+        return _intensityApproximated;
     }
 
     /// <summary>
@@ -128,9 +134,10 @@ public class XrayPeakAnalyzer
     /// </summary>
     /// <param name="lambda"></param>
     /// <returns></returns>
-    public double GetInterplaneDistance(double lambda)
+    public double GetInterplanarDistance(double lambda)
     {
-        return lambda / (2 * Math.Sin(GetTopAngle()));
+        _interplanarDistance = lambda / (2 * Math.Sin(GetTopAngle()));
+        return _interplanarDistance;
     }
 
     /// <summary>

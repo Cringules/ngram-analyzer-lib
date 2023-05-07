@@ -1,4 +1,5 @@
 ﻿using Cringules.NGram.Lib;
+using Cringules.NGram.Lib.Approximation;
 
 public class Program
 {
@@ -1134,9 +1135,14 @@ public class Program
         List<Point> points = x.Select((t, i) => new Point(t, y[i])).ToList();
         Xray xray = new Xray(points);
         Xray newXray = xray.SmoothXray(90);
-        foreach (var point in newXray.GetPeakBoundaries())
-        {
-            Console.WriteLine(point.X);
-        }
+
+        XrayPeak peak = newXray.GetPeak(20, 30);
+        peak = peak.SymmetrizePeakLeft();
+        peak.SetBackgroundLevel(1500);
+
+        XrayPeakAnalyzer peakAnalyzer = new XrayPeakAnalyzer(peak);
+        Console.WriteLine(peakAnalyzer.GetIntensityIntegral());
+        ApproximationGaussian apr = new ApproximationGaussian();
+        Console.WriteLine(peakAnalyzer.GetIntensityApproximated(apr.ApproximatePeakAuto(peak)));
     }
 }
