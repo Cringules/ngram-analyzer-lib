@@ -39,15 +39,21 @@ public class Xray
         var y = Points.Select(x => x.Y).ToList();
         var newY = new List<double>();
 
-        dynamic smoothedY = (PyLibs.SciPySignal.savgol_filter(y, coefficient, 2));
+        dynamic smoothedY = PyLibs.NumPy.average(
+            PyLibs.NumPy.lib.stride_tricks.sliding_window_view(
+                PyLibs.SciPySignal.savgol_filter(
+                    PyLibs.NumPy.average(
+                        PyLibs.NumPy.lib.stride_tricks.sliding_window_view(y, window_shape: 11),
+                        axis: 1), coefficient, 4), window_shape: 11), axis: 1);
+            
         foreach (double el in smoothedY)
         {
             newY.Add(el);
         }
 
         PythonEngine.Shutdown();
-
-        List<Point> newPoints = Points.Select((t, i) => new Point(t.X, newY[i])).ToList();
+        
+        List<Point> newPoints = Points.GetRange(10, Points.Count - 20).Select((t, i) => new Point(t.X, newY[i])).ToList();
 
         Xray newXray = new(newPoints);
         return newXray;
@@ -59,40 +65,25 @@ public class Xray
     /// <returns>Список координат по X - границ пиков.</returns>
     public List<Point> GetPeakBoundaries()
     {
-        List<double> diff = new();
-        var points = new List<Point>(Points);
-
-        for (int i = 1; i < points.Count; i++)
-        {
-            diff.Add(points[i].Y - points[i - 1].Y);
-        }
-
-        bool isCorrect = true;
-        while (isCorrect)
-        {
-            for (int i = 1; i < points.Count - 2; i++)
-            {
-                if (Math.Sign(diff[i]) == Math.Sign(diff[i - 1]) ||
-                    Math.Sign(diff[i]) == Math.Sign(diff[i + 1])) continue;
-                isCorrect = false;
-                points[i + 1] = new Point(points[i + 1].X, (points[i].Y + points[i + 2].Y) / 2);
-                diff[i] = points[i].Y - points[i + 1].Y;
-            }
-        }
-
         List<Point> peakBoundaries = new();
-        int prev = 0;
-        for (int i = 1; i < points.Count - 1; i++)
+        
+        if (!PyLibs.isInstalled)
         {
-            if (Math.Sign(diff[i]) == 0) continue;
-            
-            if (Math.Sign(diff[i]) == -1 && Math.Sign(diff[prev]) == 1)
-            {
-                peakBoundaries.Add(points[i + 1]);
-            }
-
-            prev = i;
+            throw new NotSupportedException();
         }
+
+        PythonEngine.Initialize();
+
+        var y = Points.Select(p => p.Y).ToList();
+
+        dynamic mins = PyLibs.SciPySignal.argrelextrema(PyLibs.NumPy.array(y), PyLibs.NumPy.less_equal, order: 50)[0];
+            
+        foreach (int el in mins)
+        {
+            peakBoundaries.Add(Points[el]);
+        }
+
+        PythonEngine.Shutdown();
         
         return peakBoundaries;
     }
