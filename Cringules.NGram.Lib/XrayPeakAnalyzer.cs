@@ -115,8 +115,8 @@ public class XrayPeakAnalyzer
     /// </summary>
     /// <param name="peak">Исследуемый пик.</param>
     /// <param name="lambda">Длина волны.</param>
-    /// <returns></returns>
-    public double GetInterplanarDistance(XrayPeak peak, double lambda)
+    /// <returns>Межплоскостное расстояние.</returns>
+    public double GetInterplanarDistance(XrayPeak peak, double lambda = 1.54056)
     {
         return lambda / (2 * Math.Sin(GetTopAngle(peak) * Math.PI / 360));
     }

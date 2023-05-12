@@ -21,6 +21,8 @@ public class ApproximationGaussian : IApproximator
         var peakTopY = peakAnalyzer.GetIntensityMaximum(peak);
         var integralBreadth = 0.5 * peakAnalyzer.GetPeakWidth(peak) *
                               Math.Pow(Math.PI / Math.Log(2), 0.5);
+        
+        Console.WriteLine(peakTopX + " " + peakTopY + " " + integralBreadth);
 
         var newPoints = (from point in peak.Points
             select point.X

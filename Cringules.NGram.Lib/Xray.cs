@@ -27,11 +27,11 @@ public class Xray
     /// </summary>
     /// <param name="coefficient">Коэффициент сглаживания графика.</param>
     /// <returns>Новый экземпляр класса - сглаженный график.</returns>
-    public Xray SmoothXray(int coefficient)
+    public Xray SmoothXray(int coefficient = 70)
     {
         if (!PyLibs.isInstalled)
         {
-            return new Xray(Points);
+            throw new NotSupportedException();
         }
 
         PythonEngine.Initialize();
@@ -59,33 +59,41 @@ public class Xray
     /// <returns>Список координат по X - границ пиков.</returns>
     public List<Point> GetPeakBoundaries()
     {
-        List<Point> peakBoundaries = new() { Points[0] };
+        List<double> diff = new();
+        var points = new List<Point>(Points);
 
-        // Показатель того, что мы в начале дифрактограммы - надо узнать, в данный момент пик растет или уменьшается.
-        bool isChecking = true;
-        // Показатель состояния пика - true, если растет, иначе false.
-        bool isRaising = true;
-
-        for (var i = 1; i < Points.Count - 1; i++)
+        for (int i = 1; i < points.Count; i++)
         {
-            if (isChecking && Points[i - 1].Y != Points[i].Y)
+            diff.Add(points[i].Y - points[i - 1].Y);
+        }
+
+        bool isCorrect = true;
+        while (isCorrect)
+        {
+            for (int i = 1; i < points.Count - 2; i++)
             {
-                isRaising = (Points[i - 1].Y < Points[i].Y);
-                isChecking = false;
-            }
-            else if (isRaising && Points[i - 1].Y > Points[i].Y)
-            {
-                isRaising = false;
-            }
-            else if (!isRaising && Points[i - 1].Y < Points[i].Y)
-            {
-                peakBoundaries.Add(Points[i - 1]);
-                isRaising = true;
+                if (Math.Sign(diff[i]) == Math.Sign(diff[i - 1]) ||
+                    Math.Sign(diff[i]) == Math.Sign(diff[i + 1])) continue;
+                isCorrect = false;
+                points[i + 1] = new Point(points[i + 1].X, (points[i].Y + points[i + 2].Y) / 2);
+                diff[i] = points[i].Y - points[i + 1].Y;
             }
         }
 
-        peakBoundaries.Add(Points[^1]);
+        List<Point> peakBoundaries = new();
+        int prev = 0;
+        for (int i = 1; i < points.Count - 1; i++)
+        {
+            if (Math.Sign(diff[i]) == 0) continue;
+            
+            if (Math.Sign(diff[i]) == -1 && Math.Sign(diff[prev]) == 1)
+            {
+                peakBoundaries.Add(points[i + 1]);
+            }
 
+            prev = i;
+        }
+        
         return peakBoundaries;
     }
 

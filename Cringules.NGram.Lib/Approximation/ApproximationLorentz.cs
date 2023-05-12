@@ -20,8 +20,7 @@ public class ApproximationLorentz : IApproximator
         var peakTopX = peak.GetPeakTop().X;
         var peakTopY = peakAnalyzer.GetIntensityMaximum(peak);
         var halfWidth = 0.5 * peakAnalyzer.GetPeakWidth(peak);
-        Console.WriteLine(peakTopX + " " + peakTopY + " " + halfWidth);
-
+        
         var newPoints = (from point in peak.Points
             select point.X
             into x
