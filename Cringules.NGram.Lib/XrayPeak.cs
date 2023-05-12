@@ -29,9 +29,9 @@ public class XrayPeak
     }
 
     /// <summary>
-    /// TODO: Метод для получения координаты по X вершины пика.
+    /// Метод для получения точки-вершины пика.
     /// </summary>
-    /// <returns>Угол при максимальном значении пика (координата по X).</returns>
+    /// <returns>Точка-вершина пика.</returns>
     public Point GetPeakTop()
     {
         return Points[Points.FindIndex(p => p.Y == Points.Max(p0 => p0.Y))];

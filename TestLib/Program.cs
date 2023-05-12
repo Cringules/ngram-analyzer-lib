@@ -1136,7 +1136,7 @@ public class Program
         Xray xray = new Xray(points);
         Xray newXray = xray.SmoothXray(70);
 
-        XrayPeak peak = newXray.GetPeak(20, 30);
+        /*XrayPeak peak = newXray.GetPeak(20, 30);
         peak = peak.SymmetrizePeakLeft();
         peak.SetBackgroundLevel(200);
 
@@ -1144,7 +1144,11 @@ public class Program
         ApproximationLorentz apr = new ApproximationLorentz();
         peakAnalyzer.GetInterplanarDistance(peak, 1.54056);
         Console.WriteLine(peakAnalyzer.GetIntensityApproximated(peak, apr.ApproximatePeakAuto(peak)));
+        Console.WriteLine(peakAnalyzer.GetIntensityApproximated(peak, (new ApproximationGaussian()).ApproximatePeakAuto(peak)));
         PeakInfo peakInfo = peakAnalyzer.GetPeakInfo(peak, apr.ApproximatePeakAuto(peak), 1.54056);
-        Console.WriteLine(peakAnalyzer.GetIntensityApproximated(peak, apr.ApproximatePeakAuto(peak)));
+        Console.WriteLine(peakAnalyzer.GetIntensityApproximated(peak, apr.ApproximatePeakAuto(peak)));*/
+
+        var peaks = newXray.GetPeakBoundaries();
+        Console.WriteLine();
     }
 }

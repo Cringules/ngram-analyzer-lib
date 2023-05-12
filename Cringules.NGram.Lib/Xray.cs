@@ -27,11 +27,11 @@ public class Xray
     /// </summary>
     /// <param name="coefficient">Коэффициент сглаживания графика.</param>
     /// <returns>Новый экземпляр класса - сглаженный график.</returns>
-    public Xray SmoothXray(int coefficient)
+    public Xray SmoothXray(int coefficient = 70)
     {
         if (!PyLibs.isInstalled)
         {
-            return new Xray(Points);
+            throw new NotSupportedException();
         }
 
         PythonEngine.Initialize();
@@ -39,15 +39,21 @@ public class Xray
         var y = Points.Select(x => x.Y).ToList();
         var newY = new List<double>();
 
-        dynamic smoothedY = (PyLibs.SciPySignal.savgol_filter(y, coefficient, 2));
+        dynamic smoothedY = PyLibs.NumPy.average(
+            PyLibs.NumPy.lib.stride_tricks.sliding_window_view(
+                PyLibs.SciPySignal.savgol_filter(
+                    PyLibs.NumPy.average(
+                        PyLibs.NumPy.lib.stride_tricks.sliding_window_view(y, window_shape: 11),
+                        axis: 1), coefficient, 4), window_shape: 11), axis: 1);
+            
         foreach (double el in smoothedY)
         {
             newY.Add(el);
         }
 
         PythonEngine.Shutdown();
-
-        List<Point> newPoints = Points.Select((t, i) => new Point(t.X, newY[i])).ToList();
+        
+        List<Point> newPoints = Points.GetRange(10, Points.Count - 20).Select((t, i) => new Point(t.X, newY[i])).ToList();
 
         Xray newXray = new(newPoints);
         return newXray;
@@ -59,33 +65,26 @@ public class Xray
     /// <returns>Список координат по X - границ пиков.</returns>
     public List<Point> GetPeakBoundaries()
     {
-        List<Point> peakBoundaries = new() { Points[0] };
-
-        // Показатель того, что мы в начале дифрактограммы - надо узнать, в данный момент пик растет или уменьшается.
-        bool isChecking = true;
-        // Показатель состояния пика - true, если растет, иначе false.
-        bool isRaising = true;
-
-        for (var i = 1; i < Points.Count - 1; i++)
+        List<Point> peakBoundaries = new();
+        
+        if (!PyLibs.isInstalled)
         {
-            if (isChecking && Points[i - 1].Y != Points[i].Y)
-            {
-                isRaising = (Points[i - 1].Y < Points[i].Y);
-                isChecking = false;
-            }
-            else if (isRaising && Points[i - 1].Y > Points[i].Y)
-            {
-                isRaising = false;
-            }
-            else if (!isRaising && Points[i - 1].Y < Points[i].Y)
-            {
-                peakBoundaries.Add(Points[i - 1]);
-                isRaising = true;
-            }
+            throw new NotSupportedException();
         }
 
-        peakBoundaries.Add(Points[^1]);
+        PythonEngine.Initialize();
 
+        var y = Points.Select(p => p.Y).ToList();
+
+        dynamic mins = PyLibs.SciPySignal.argrelextrema(PyLibs.NumPy.array(y), PyLibs.NumPy.less_equal, order: 50)[0];
+            
+        foreach (int el in mins)
+        {
+            peakBoundaries.Add(Points[el]);
+        }
+
+        PythonEngine.Shutdown();
+        
         return peakBoundaries;
     }
 

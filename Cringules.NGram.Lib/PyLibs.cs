@@ -22,6 +22,11 @@ public class PyLibs
     /// Подмодуль scipy.signal.
     /// </summary>
     public static dynamic SciPySignal { get; }
+    
+    /// <summary>
+    /// Подмодуль scipy.optimize.
+    /// </summary>
+    public static dynamic SciPyOptimize { get; }
 
     /// <summary>
     /// Индикатор того, что библиотеки установлены.
@@ -44,7 +49,9 @@ public class PyLibs
 
         NumPy = Py.Import("numpy");
         SciPy = Py.Import("scipy");
+        
         SciPySignal = Py.Import("scipy.signal");
+        SciPyOptimize = Py.Import("scipy.optimize");
 
         PythonEngine.Shutdown();
 
