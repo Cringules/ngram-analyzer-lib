@@ -1149,6 +1149,11 @@ public class Program
         Console.WriteLine(peakAnalyzer.GetIntensityApproximated(peak, apr.ApproximatePeakAuto(peak)));*/
 
         var peaks = newXray.GetPeakBoundaries();
-        Console.WriteLine();
+        for (int i = 0; i < peaks.Count - 1; i++)
+        {
+            var peak = newXray.GetPeak(peaks[i].X, peaks[i + 1].X);
+            var newPeak = peak.SymmetrizePeakRight();
+            Console.WriteLine();
+        }
     }
 }

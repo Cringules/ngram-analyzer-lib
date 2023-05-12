@@ -97,13 +97,15 @@ public class XrayPeak
     /// <returns>Новый пик, отсимметризованный по правой части.</returns>
     public XrayPeak SymmetrizePeakRight()
     {
+        var topIndex = Points.FindIndex(p => p.Y == GetPeakTop().Y);
+
         List<Point> newPoints =
-            new(Points.GetRange(0, Points.FindIndex(p => p.Y == GetPeakTop().Y)));
+            new(Points.GetRange(topIndex, Points.Count - topIndex));
         List<Point> symmetricalPoints = new(newPoints);
         symmetricalPoints.Reverse();
         var xTop = GetPeakTop().X;
-        newPoints = newPoints.Concat(symmetricalPoints.Select(p => new Point(2 * xTop - p.X, p.Y)))
-            .ToList();
+        newPoints = (symmetricalPoints.Select(p => new Point(2 * xTop - p.X, p.Y)))
+            .Concat(newPoints).ToList();
 
         return new XrayPeak(newPoints);
     }
