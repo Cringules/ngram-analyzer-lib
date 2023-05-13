@@ -43,6 +43,6 @@ public class ApproximationLorentz : IApproximator
                 (Math.Pow(halfWidth, 2) / (Math.Pow(halfWidth, 2) + Math.Pow(xCoefficient * x - peakTopX, 2)))
             select new Point(x, y)).ToList();
 
-        return new ApproximationResult(newPoints);
+        return new ApproximationResult(newPoints, 0);
     }
 }

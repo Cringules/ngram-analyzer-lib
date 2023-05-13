@@ -47,6 +47,6 @@ public class ApproximationGaussian : IApproximator
                 Math.Exp(-Math.PI * Math.Pow(xCoefficient * x - peakTopX, 2) / integralBreadth)
             select new Point(x, y)).ToList();
 
-        return new ApproximationResult(newPoints);
+        return new ApproximationResult(newPoints, 1);
     }
 }
