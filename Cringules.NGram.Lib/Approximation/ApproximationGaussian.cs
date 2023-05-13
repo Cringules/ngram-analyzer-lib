@@ -15,31 +15,38 @@ public class ApproximationGaussian : IApproximator
     /// <returns>Результат аппроксимации.</returns>
     public ApproximationResult ApproximatePeakAuto(XrayPeak peak)
     {
+        return ApproximatePeakManual(peak, 1, 1, 0);
+    }
+
+    /// <summary>
+    /// Метод для ручной аппроксимации пика по Гауссу.
+    /// </summary>
+    /// <param name="peak"></param>
+    /// <param name="xCoefficient"></param>
+    /// <param name="yCoefficient"></param>
+    /// <param name="backCoefficient"></param>
+    /// <param name="n"></param>
+    /// <returns>Результат аппроксимации.</returns>
+    public ApproximationResult ApproximatePeakManual(XrayPeak peak, double xCoefficient,
+        double yCoefficient,
+        double backCoefficient, double n = 0)
+    {
         var peakAnalyzer = new XrayPeakAnalyzer();
-        
+
         var peakTopX = peak.GetPeakTop().X;
         var peakTopY = peakAnalyzer.GetIntensityMaximum(peak);
         var integralBreadth = 0.5 * peakAnalyzer.GetPeakWidth(peak) *
                               Math.Pow(Math.PI / Math.Log(2), 0.5);
-        
+
         Console.WriteLine(peakTopX + " " + peakTopY + " " + integralBreadth);
 
         var newPoints = (from point in peak.Points
             select point.X
             into x
-            let y = peak.BackgroundLevel + peakTopY * Math.Exp(-Math.PI * Math.Pow(x - peakTopX, 2) / integralBreadth)
+            let y = peak.BackgroundLevel + backCoefficient + peakTopY * yCoefficient *
+                Math.Exp(-Math.PI * Math.Pow(xCoefficient * x - peakTopX, 2) / integralBreadth)
             select new Point(x, y)).ToList();
 
         return new ApproximationResult(newPoints);
-    }
-
-    /// <summary>
-    /// TODO: Метод для ручной аппроксимации пика по Гауссу.
-    /// </summary>
-    /// <returns>Результат аппроксимации.</returns>
-    public ApproximationResult ApproximatePeakManual(XrayPeak peak, double height, double width,
-        double corr, double lambda = 0)
-    {
-        return new ApproximationResult(peak.Points);
     }
 }
