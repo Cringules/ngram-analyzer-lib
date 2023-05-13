@@ -11,11 +11,18 @@ public struct ApproximationResult
     public List<Point> Points { get; }
 
     /// <summary>
+    /// Коэффициент Псевдо-Войта.
+    /// </summary>
+    public double N { get; }
+
+    /// <summary>
     /// Конструктор структуры.
     /// </summary>
     /// <param name="points">Список точек.</param>
-    public ApproximationResult(List<Point> points)
+    /// <param name="n">Коэффициент Псевдо-Войта.</param>
+    public ApproximationResult(IEnumerable<Point> points, double n)
     {
         Points = new List<Point>(points);
+        N = n;
     }
 }
