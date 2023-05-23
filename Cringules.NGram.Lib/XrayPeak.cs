@@ -25,7 +25,7 @@ public class XrayPeak
     public XrayPeak(IEnumerable<Point> points)
     {
         Points = new List<Point>(points);
-        BackgroundLevel = Points[0].Y;
+        BackgroundLevel = Math.Max(Points[0].Y, Points[^1].Y);
     }
 
     /// <summary>

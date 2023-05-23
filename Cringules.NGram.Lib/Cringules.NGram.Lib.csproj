@@ -31,4 +31,11 @@
       <EmbeddedResource Include="Resources\scipy-1.10.1-cp311-cp311-win_amd64.whl" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Remove="PythonScripts\AutoVoigt.py" />
+      <EmbeddedResource Include="PythonScripts\AutoVoigt.py">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </EmbeddedResource>
+    </ItemGroup>
+
 </Project>

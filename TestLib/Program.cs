@@ -1148,12 +1148,18 @@ public class Program
         PeakInfo peakInfo = peakAnalyzer.GetPeakInfo(peak, apr.ApproximatePeakAuto(peak), 1.54056);
         Console.WriteLine(peakAnalyzer.GetIntensityApproximated(peak, apr.ApproximatePeakAuto(peak)));*/
 
-        var peaks = newXray.GetPeakBoundaries();
+        /*var peaks = newXray.GetPeakBoundaries();
         for (int i = 0; i < peaks.Count - 1; i++)
         {
             var peak = newXray.GetPeak(peaks[i].X, peaks[i + 1].X);
             var newPeak = peak.SymmetrizePeakRight();
             Console.WriteLine();
-        }
+        }*/
+        
+        XrayPeak peak = newXray.GetPeak(35, 45);
+        peak = peak.SymmetrizePeakLeft();
+
+        ApproximationVoigt v = new();
+        Console.WriteLine(v.ApproximatePeakAuto(peak).N);
     }
 }
