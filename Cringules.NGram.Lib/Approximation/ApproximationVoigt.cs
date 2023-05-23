@@ -1,4 +1,6 @@
-﻿using Python.Included;
+﻿using System.Reflection;
+using System.Runtime.Versioning;
+using Python.Included;
 using Python.Runtime;
 
 namespace Cringules.NGram.Lib.Approximation;
@@ -24,38 +26,48 @@ public class ApproximationVoigt : IApproximator
 
         var peakAnalyzer = new XrayPeakAnalyzer();
 
+        var x = peak.Points.Select(p => p.X).ToList();
+        var y = peak.Points.Select(p => p.Y).ToList();
+
         var peakTopX = peak.GetPeakTop().X;
         var peakTopY = peakAnalyzer.GetIntensityMaximum(peak);
         var halfWidth = 0.5 * peakAnalyzer.GetPeakWidth(peak);
         var integralBreadth = 0.5 * peakAnalyzer.GetPeakWidth(peak) *
                               Math.Pow(Math.PI / Math.Log(2), 0.5);
-
-        var file =
-            Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) +
-            @"\PythonScripts\approximateVoigt.py";
+        
+        double n;
 
         using (var scope = Py.CreateScope())
         {
-            string code = File.ReadAllText(file);
-            var compiledCode = PythonEngine.Compile(code, file);
+            string code = File.ReadAllText("PythonScripts\\AutoVoigt.py");
+            
+            var compiledCode = PythonEngine.Compile(code, "PythonScripts\\AutoVoigt.py");
             scope.Execute(compiledCode);
             PyObject exampleClass = scope.Get("approximation");
             PyObject pythongReturn =
-                exampleClass.InvokeMethod("run", new PyObject[] { peakTopX.ToPython() });
-            string? result =
-                pythongReturn
-                        .AsManagedObject(
-                            typeof(string)) as
-                    string; // convert the returned string to managed string object
+                exampleClass.InvokeMethod("run", new PyObject[]
+                {
+                    exampleClass, x.ToPython(), y.ToPython(), peak.BackgroundLevel.ToPython(),
+                    peakTopX.ToPython(), peakTopY.ToPython(), halfWidth.ToPython(),
+                    integralBreadth.ToPython()
+                });
+            dynamic result = pythongReturn;
+            n = Double.Parse(result.ToString());
         }
 
         PythonEngine.Shutdown();
 
-        return new(peak.Points, 0);
+        var gaussian = (new ApproximationGaussian()).ApproximatePeakAuto(peak);
+        var lorentz = (new ApproximationLorentz()).ApproximatePeakAuto(peak);
+
+        var newPoints = gaussian.Points.Select((t, i) => new Point(t.X, n * t.Y + (1 - n) * lorentz
+            .Points[i].Y)).ToList();
+
+        return new ApproximationResult(peak.Points, n);
     }
 
     /// <summary>
-    /// TODO: Метод для ручной аппроксимации пика по Войту.
+    /// Метод для ручной аппроксимации пика по Войту.
     /// </summary>
     /// <returns>Результат аппроксимации.</returns>
     public ApproximationResult ApproximatePeakManual(XrayPeak peak, double xCoefficient,
