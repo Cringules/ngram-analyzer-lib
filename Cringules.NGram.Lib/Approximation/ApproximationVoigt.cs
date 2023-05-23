@@ -39,9 +39,14 @@ public class ApproximationVoigt : IApproximator
 
         using (var scope = Py.CreateScope())
         {
-            string code = File.ReadAllText("PythonScripts\\AutoVoigt.py");
+            Stream? stream = GetType().Assembly.GetManifestResourceStream("Cringules.NGram.Lib.PythonScripts.AutoVoigt.py");
+            string code;
+            using (StreamReader s = new StreamReader(stream))
+            {
+                code = s.ReadToEnd();
+            }
             
-            var compiledCode = PythonEngine.Compile(code, "PythonScripts\\AutoVoigt.py");
+            var compiledCode = PythonEngine.Compile(code, "AutoVoigt.py");
             scope.Execute(compiledCode);
             PyObject exampleClass = scope.Get("approximation");
             PyObject pythongReturn =
