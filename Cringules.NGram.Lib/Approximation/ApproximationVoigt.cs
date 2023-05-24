@@ -86,6 +86,6 @@ public class ApproximationVoigt : IApproximator
         var newPoints = gaussian.Points.Select((t, i) => new Point(t.X, n * t.Y + (1 - n) * lorentz
             .Points[i].Y)).ToList();
 
-        return new ApproximationResult(peak.Points, n);
+        return new ApproximationResult(newPoints, n);
     }
 }
