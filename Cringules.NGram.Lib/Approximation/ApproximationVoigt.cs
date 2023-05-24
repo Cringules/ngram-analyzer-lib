@@ -57,7 +57,7 @@ public class ApproximationVoigt : IApproximator
                     integralBreadth.ToPython()
                 });
             dynamic result = pythongReturn;
-            n = Double.Parse(result.ToString());
+            n = result;
         }
 
         PythonEngine.Shutdown();

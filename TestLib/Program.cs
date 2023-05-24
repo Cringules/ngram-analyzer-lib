@@ -1,4 +1,5 @@
-﻿using Cringules.NGram.Lib;
+﻿using System.Globalization;
+using Cringules.NGram.Lib;
 using Cringules.NGram.Lib.Approximation;
 
 public class Program
@@ -1155,6 +1156,8 @@ public class Program
             var newPeak = peak.SymmetrizePeakRight();
             Console.WriteLine();
         }*/
+
+        Thread.CurrentThread.CurrentCulture = new CultureInfo("ru-ru");
         
         XrayPeak peak = newXray.GetPeak(35, 45);
         peak = peak.SymmetrizePeakLeft();
